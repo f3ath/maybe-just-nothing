@@ -11,3 +11,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - 2020-05-24
 ### Added
 - New methods: `cast()`, `orAsync()`, `orGetAsync()`, `flatMap()`, `merge()`
+
+[0.1.0]: https://github.com/f3ath/maybe-just-nothing/compare/0.0.1..0.1.0
