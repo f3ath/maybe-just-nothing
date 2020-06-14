@@ -1,5 +1,5 @@
 name: maybe_just_nothing
-version: 0.1.7
+version: 0.1.8
 homepage: https://github.com/f3ath/maybe-just-nothing
 description: Yet another variation of the good old Maybe monad with eager execution written in Dart. Or maybe it's just nothing.
 environment:

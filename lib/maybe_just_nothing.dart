@@ -104,7 +104,7 @@ class Just<T> with _Aliases<T> implements Maybe<T> {
 
 /// Represents a non-existing value of type T.
 class Nothing<T> with _Aliases<T> implements Maybe<T> {
-  Nothing();
+  const Nothing();
 
   @override
   Nothing<P> map<P>(P Function(T _) mapper) => Nothing<P>();
