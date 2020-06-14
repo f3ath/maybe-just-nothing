@@ -57,7 +57,7 @@ class Just<T> with _Aliases<T> implements Maybe<T> {
   final T value;
 
   @override
-  Maybe<P> map<P>(P Function(T _) mapper) => Just(mapper(value));
+  Just<P> map<P>(P Function(T _) mapper) => Just(mapper(value));
 
   @override
   Maybe<P> flatMap<P>(Maybe<P> Function(T _) mapper) => mapper(value);
@@ -101,10 +101,10 @@ class Nothing<T> with _Aliases<T> implements Maybe<T> {
   Nothing();
 
   @override
-  Maybe<P> map<P>(P Function(T _) mapper) => Nothing<P>();
+  Nothing<P> map<P>(P Function(T _) mapper) => Nothing<P>();
 
   @override
-  Maybe<P> flatMap<P>(Maybe<P> Function(T _) mapper) => Nothing<P>();
+  Nothing<P> flatMap<P>(Maybe<P> Function(T _) mapper) => Nothing<P>();
 
   @override
   T or(T defaultValue) => defaultValue;
@@ -129,13 +129,13 @@ class Nothing<T> with _Aliases<T> implements Maybe<T> {
   void ifNothing(void Function() callback) => callback();
 
   @override
-  Maybe<T> where(bool Function(T _) predicate) => this;
+  Nothing<T> where(bool Function(T _) predicate) => this;
 
   @override
-  Maybe<P> cast<P extends T>() => Nothing<P>();
+  Nothing<P> cast<P extends T>() => Nothing<P>();
 
   @override
-  Maybe<V> merge<V, R>(Maybe<R> other, V Function(T a, R b) merger) =>
+  Nothing<V> merge<V, R>(Maybe<R> other, V Function(T a, R b) merger) =>
       Nothing<V>();
 }
 
