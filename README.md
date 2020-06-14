@@ -25,35 +25,35 @@ void main() {
 - `Nothing<T>()` represents a missing value of type `T`
 
 ## Methods
-### map
+### `map`
 Maps the value.
-### flatMap
+### `flatMap`
 Maps the value.
-### filter
+### `filter` or `where`
 Filters the value by the given predicate.
-### or
+### `or`
 Returns the wrapped value (if present), or the default value (otherwise).
-### orAsync
+### `orAsync`
 Returns a `Future` of the wrapped value (if present), or the default value (otherwise).
-### orGet
+### `orGet`
 Returns the wrapped value (if present), or the result of the producer function (otherwise).
-### orGetAsync
+### `orGetAsync`
 Returns a `Future` of the wrapped value (if present), or the result of the producer function (otherwise).
-### orThrow
+### `orThrow`
 Returns the wrapped value (if present), or throws the result of the producer function (otherwise).
-### ifPresent
+### `ifPresent`
 Calls the consumer function if the wrapped value is present.
-### ifNothing
+### `ifNothing`
 Calls the callback function if the wrapped value is not present.
-### cast
+### `cast`
 Narrows the type to P if the value is present and has actually the type of P.
-### merge
+### `merge`
 Merges the other `Maybe` using the merger function.
 
 ### Q&amp;A
 #### Where is `isPresent`?
 It is not there by design. Most of the times using `ifPresent()` and `ifNothing()` should be sufficient. 
-If thee is no choice but inline logic, use the type checks:
+If there is no choice but inline logic, use the type checks:
 ```dart
 void fun(Maybe<int> score) {
   if (score is Just<int>) {
