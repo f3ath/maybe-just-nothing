@@ -1,3 +1,5 @@
+import 'dart:async';
+
 /// A variation of the Maybe monad with eager execution.
 abstract class Maybe<T> {
   /// Creates an instance of the monadic value.
