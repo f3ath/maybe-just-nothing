@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 void main() {
   test('Basic getters', () async {
     Maybe<int> oddTimes3(int number) =>
-        Maybe(number).filter((_) => _.isOdd).map((_) => _ * 3);
+        Maybe(number).where((_) => _.isOdd).map((_) => _ * 3);
 
     expect(oddTimes3(5).orThrow(() => 'Oops'), 15);
     expect(await oddTimes3(5).orGetAsync(() => Future.value(100)), 15);
@@ -33,6 +33,9 @@ void main() {
   });
 
   test('Filtering', () {
+    expect(Just(2).where((_) => _.isEven).orThrow(() => 'Oops'), 2);
+    expect(Nothing<int>().where((_) => _.isEven), isA<Nothing<int>>());
+
     expect(Just(2).filter((_) => _.isEven).orThrow(() => 'Oops'), 2);
     expect(Nothing<int>().filter((_) => _.isEven), isA<Nothing<int>>());
   });

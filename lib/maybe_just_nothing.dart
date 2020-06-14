@@ -10,6 +10,9 @@ abstract class Maybe<T> {
   Maybe<P> flatMap<P>(Maybe<P> Function(T _) mapper);
 
   /// Filter the value using the [predicate].
+  Maybe<T> where(bool Function(T _) predicate);
+
+  /// Same as `where`
   Maybe<T> filter(bool Function(T _) predicate);
 
   /// Returns the wrapped value (if present), or the [defaultValue] (otherwise).
@@ -42,7 +45,7 @@ abstract class Maybe<T> {
 }
 
 /// Represents an existing non-null value of type T.
-class Just<T> implements Maybe<T> {
+class Just<T> with _Aliases<T> implements Maybe<T> {
   /// Throws an [ArgumentError] if the value is null.
   Just(this.value) {
     ArgumentError.checkNotNull(value);
@@ -80,7 +83,7 @@ class Just<T> implements Maybe<T> {
   void ifNothing(void Function() callback) {}
 
   @override
-  Maybe<T> filter(bool Function(T _) predicate) =>
+  Maybe<T> where(bool Function(T _) predicate) =>
       predicate(value) ? this : Nothing<T>();
 
   @override
@@ -92,7 +95,7 @@ class Just<T> implements Maybe<T> {
 }
 
 /// Represents a non-existing value of type T.
-class Nothing<T> implements Maybe<T> {
+class Nothing<T> with _Aliases<T> implements Maybe<T> {
   Nothing();
 
   @override
@@ -124,7 +127,7 @@ class Nothing<T> implements Maybe<T> {
   void ifNothing(void Function() callback) => callback();
 
   @override
-  Maybe<T> filter(bool Function(T _) predicate) => this;
+  Maybe<T> where(bool Function(T _) predicate) => this;
 
   @override
   Maybe<P> cast<P extends T>() => Nothing<P>();
@@ -132,4 +135,12 @@ class Nothing<T> implements Maybe<T> {
   @override
   Maybe<V> merge<V, R>(Maybe<R> other, V Function(T a, R b) merger) =>
       Nothing<V>();
+}
+
+mixin _Aliases<T> {
+  /// Filter the value using the [predicate].
+  Maybe<T> where(bool Function(T _) predicate);
+
+  /// Same as `where`
+  Maybe<T> filter(bool Function(T _) predicate) => where(predicate);
 }
