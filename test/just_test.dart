@@ -78,4 +78,9 @@ void main() {
   test('Just(null) throws', () {
     expect(() => Just(null), throwsArgumentError);
   });
+
+  test('Chaining', () {
+    expect(Nothing<int>().chain(() => Just(2)).or(42), 2);
+    expect(Just(1).chain(() => Just(2)).or(42), 1);
+  });
 }

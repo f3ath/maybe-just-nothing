@@ -49,6 +49,8 @@ Calls the callback function if the wrapped value is not present.
 Narrows the type to P if the value is present and has actually the type of P.
 ### `merge`
 Merges the other `Maybe` using the merger function.
+### `chain`
+A sort of "Chain of Responsibility" pattern. Returns the next Maybe if this is empty.
 
 ### Q&amp;A
 #### Where is `isPresent`?

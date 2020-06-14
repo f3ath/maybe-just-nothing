@@ -44,6 +44,9 @@ abstract class Maybe<T> {
 
   /// Merges the [other] value using the [merger] function.
   Maybe<V> merge<V, R>(Maybe<R> other, V Function(T a, R b) merger);
+
+  /// A sort of "Chain of Responsibility" pattern. Returns the [next] Maybe if this is empty.
+  Maybe<T> chain(Maybe<T> Function() next);
 }
 
 /// Represents an existing non-null value of type T.
@@ -94,6 +97,9 @@ class Just<T> with _Aliases<T> implements Maybe<T> {
   @override
   Maybe<V> merge<V, R>(Maybe<R> other, V Function(T a, R b) merger) =>
       flatMap((a) => other.map((b) => merger(a, b)));
+
+  @override
+  Maybe<T> chain(Maybe<T> Function() next) => this;
 }
 
 /// Represents a non-existing value of type T.
@@ -137,6 +143,9 @@ class Nothing<T> with _Aliases<T> implements Maybe<T> {
   @override
   Nothing<V> merge<V, R>(Maybe<R> other, V Function(T a, R b) merger) =>
       Nothing<V>();
+
+  @override
+  Maybe<T> chain(Maybe<T> Function() next) => next();
 }
 
 mixin _Aliases<T> {
