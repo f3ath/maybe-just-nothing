@@ -34,10 +34,10 @@ abstract class Maybe<T> {
 
   /// Calls the [consumer] if the wrapped value is present. If the value is not present,
   /// and the [otherwise] function is passed, calls it.
-  void ifPresent(void Function(T _) consumer, {void Function() otherwise});
+  Maybe<T> ifPresent(void Function(T _) consumer, {void Function() otherwise});
 
   /// Calls the [callback] function if the wrapped value is not present.
-  void ifNothing(void Function() callback);
+  Maybe<T> ifNothing(void Function() callback);
 
   /// Narrows the type to P if the value is present and has actually the type of P.
   Maybe<P> cast<P>();
@@ -81,11 +81,13 @@ class Just<T> with _Aliases<T> implements Maybe<T> {
   T orThrow(Object Function() producer) => value;
 
   @override
-  void ifPresent(void Function(T _) consumer, {void Function() otherwise}) =>
-      consumer(value);
+  Just<T> ifPresent(void Function(T _) consumer, {void Function() otherwise}) {
+    consumer(value);
+    return this;
+  }
 
   @override
-  void ifNothing(void Function() callback) {}
+  Just<T> ifNothing(void Function() callback) => this;
 
   @override
   Maybe<T> where(bool Function(T _) predicate) =>
@@ -128,11 +130,17 @@ class Nothing<T> with _Aliases<T> implements Maybe<T> {
   T orThrow(Object Function() producer) => throw producer();
 
   @override
-  void ifPresent(void Function(T _) consumer, {void Function() otherwise}) =>
-      otherwise?.call();
+  Nothing<T> ifPresent(void Function(T _) consumer,
+      {void Function() otherwise}) {
+    otherwise?.call();
+    return this;
+  }
 
   @override
-  void ifNothing(void Function() callback) => callback();
+  Nothing<T> ifNothing(void Function() callback) {
+    callback();
+    return this;
+  }
 
   @override
   Nothing<T> where(bool Function(T _) predicate) => this;
