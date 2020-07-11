@@ -1,7 +1,7 @@
 import 'package:maybe_just_nothing/maybe_just_nothing.dart';
 
 Maybe<int> addTwoIntegers(dynamic a, dynamic b) =>
-    Maybe(a).cast<int>().merge(Maybe(b).cast<int>(), (a, b) => a + b);
+    Maybe(a).type<int>().merge(Maybe(b).type<int>(), (a, b) => a + b);
 
 void main() {
   // Prints 42

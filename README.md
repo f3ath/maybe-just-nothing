@@ -22,6 +22,7 @@ four.ifPresent(print); // prints "4"
 final nothing = Nothing<int>(); // the type parameter is optional
 final alsoNothing = nothing.map((x) => x * 2); // alsoNothing is inferred as Nothing<int>
 alsoNothing.ifPresent(print); // does nothing since the value is not present
+alsoNothing.ifNothing(() => print('Empty value')); // prints "Empty value"
 ```
 
 `Just` does not accept null values:
@@ -45,7 +46,7 @@ Maybe<int> triple(int x) => Maybe(x).map((x) => x * 3);
 Maybe(2).flatMap(triple).ifPresent(print); // prints "6"
 ```
 
-An operation on two maybe-values can be performed using the `merge()` method:
+An operation on two maybe-values can be performed using `merge()`:
 ```dart
 final two = Maybe(2);
 final three = Maybe(3);
@@ -57,16 +58,16 @@ two.merge(three, (x, y) => x + y).ifPresent(print); // prints "5"
 Filtering is checking whether the maybe-value satisfies a certain condition. If it does, 
 the value remains intact, otherwise `Nothing` is returned. 
 
-To check for the value itself, use the `where()` method: 
+To filter bu the value itself, use the `where()`: 
 ```dart
 Maybe(2).where((x) => x.isEven).ifPresent(print); // prints "2"
 Maybe(3).where((x) => x.isEven).ifPresent(print); // 3 is odd, so nothing happens
 ```
 
-To check if the value is of a certain type, use `cast<T>()`:
+To filter by the type, use `type<T>()`:
 ```dart
-Maybe(2).cast<int>().ifPresent(print); // prints "2"
-Maybe(2).cast<String>().ifPresent(print); // nothing happens
+final maybeInt = Maybe(2).type<int>(); // Just<int>
+final maybeString = Maybe(2).type<String>(); // Nothing<String>
 ```
 
 ## Fallback chain
@@ -94,12 +95,12 @@ Maybe(a) // this one if empty
 // Same with fallback()
 Maybe(a) // this one if empty
   .fallback(() => Maybe(b)) // this function returns a non-empty value
-  .fallback(() => Maybe(c)) // this function will not be called
+  .fallback(() => Maybe(c)) // this function will NOT be called
   .ifPresent(print); // prints "2"
 ```
 
 ## Consuming the value
-The intentions of `Maybe` is to give it the consumer function instead of retrieving the value.
+The intention of `Maybe` is to give it the consumer function instead of retrieving the value.
 This is the most concise and clear way if using it.
 ```dart
 int a;
@@ -110,10 +111,9 @@ final value.ifNothing(() {/* do something else*/});
 ```
 
 ## Reading the value
-Sometimes, however, you need the actual value. In such cases you'll have to provide the default 
-value as well. 
+Sometimes, however, you need the actual value. In such cases you'll have to provide the default value as well. 
 
-In the mose simple scenario, use the `or()` method:
+In the simplest scenario, use `or()`:
 
 ```dart
 int a;

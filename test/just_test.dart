@@ -46,12 +46,12 @@ void main() {
 
   test('Cast', () {
     dynamic a = 2;
-    expect(Maybe(a).cast<int>(), isA<Just<int>>());
-    expect(Maybe(a).cast<String>(), isA<Nothing<String>>());
-    expect(Maybe(a).cast<int>().orThrow(() => 'Oops'), 2);
+    expect(Maybe(a).type<int>(), isA<Just<int>>());
+    expect(Maybe(a).type<String>(), isA<Nothing<String>>());
+    expect(Maybe(a).type<int>().orThrow(() => 'Oops'), 2);
     a = null;
-    expect(Maybe(a).cast<int>(), isA<Nothing<int>>());
-    expect(Maybe(a).cast<bool>(), isA<Nothing<bool>>());
+    expect(Maybe(a).type<int>(), isA<Nothing<int>>());
+    expect(Maybe(a).type<bool>(), isA<Nothing<bool>>());
   });
 
   test('Default value producer', () {
@@ -92,9 +92,11 @@ void main() {
     expect(Maybe(1) == Maybe(1), isTrue);
     expect(Maybe(1) == Maybe(2), isFalse);
     expect(Maybe(1) == Nothing<int>(), isFalse);
+    // ignore: unrelated_type_equality_checks
     expect(Maybe(1) == Nothing(), isFalse);
     expect(Maybe(d) == Nothing(), isFalse);
     expect(Nothing<int>() == Maybe(1), isFalse);
+    // ignore: unrelated_type_equality_checks
     expect(Nothing() == Maybe(1), isFalse);
     expect(Nothing<int>() == Nothing<int>(), isTrue);
     expect(Nothing() == Nothing(), isTrue);
@@ -104,6 +106,7 @@ void main() {
 
     int a;
     String b;
+    // ignore: unrelated_type_equality_checks
     expect(Maybe(a) == Maybe(b), isFalse);
   });
 
