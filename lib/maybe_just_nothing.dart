@@ -14,9 +14,6 @@ abstract class Maybe<T> {
   /// Filter the value using the [predicate].
   Maybe<T> where(bool Function(T _) predicate);
 
-  /// Same as `where`
-  Maybe<T> filter(bool Function(T _) predicate);
-
   /// Returns the wrapped value (if present), or the [defaultValue] (otherwise).
   T or(T defaultValue);
 
@@ -45,12 +42,15 @@ abstract class Maybe<T> {
   /// Merges the [other] value using the [merger] function.
   Maybe<V> merge<V, R>(Maybe<R> other, V Function(T a, R b) merger);
 
-  /// A sort of "Chain of Responsibility" pattern. Returns the [next] Maybe if this is empty.
-  Maybe<T> chain(Maybe<T> Function() next);
+  /// Returns the result of [next] if this is empty.
+  Maybe<T> fallback(Maybe<T> Function() next);
+
+  /// Returns the [next] Maybe if this is empty.
+  Maybe<T> chain(Maybe<T> next);
 }
 
 /// Represents an existing non-null value of type T.
-class Just<T> with _Aliases<T> implements Maybe<T> {
+class Just<T> implements Maybe<T> {
   /// Throws an [ArgumentError] if the value is null.
   Just(this.value) {
     ArgumentError.checkNotNull(value);
@@ -101,11 +101,20 @@ class Just<T> with _Aliases<T> implements Maybe<T> {
       flatMap((a) => other.map((b) => merger(a, b)));
 
   @override
-  Maybe<T> chain(Maybe<T> Function() next) => this;
+  Maybe<T> fallback(Maybe<T> Function() next) => this;
+
+  @override
+  Maybe<T> chain(Maybe<T> next) => this;
+
+  @override
+  bool operator ==(other) => other is Just<T> && other.value == value;
+
+  @override
+  int get hashCode => value.hashCode;
 }
 
 /// Represents a non-existing value of type T.
-class Nothing<T> with _Aliases<T> implements Maybe<T> {
+class Nothing<T> implements Maybe<T> {
   const Nothing();
 
   @override
@@ -153,13 +162,14 @@ class Nothing<T> with _Aliases<T> implements Maybe<T> {
       Nothing<V>();
 
   @override
-  Maybe<T> chain(Maybe<T> Function() next) => next();
-}
+  Maybe<T> fallback(Maybe<T> Function() next) => next();
 
-mixin _Aliases<T> {
-  /// Filter the value using the [predicate].
-  Maybe<T> where(bool Function(T _) predicate);
+  @override
+  Maybe<T> chain(Maybe<T> next) => next;
 
-  /// Same as `where`
-  Maybe<T> filter(bool Function(T _) predicate) => where(predicate);
+  @override
+  bool operator ==(other) => other.runtimeType == runtimeType;
+
+  @override
+  int get hashCode => runtimeType.hashCode;
 }

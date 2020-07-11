@@ -37,9 +37,6 @@ void main() {
   test('Filtering', () {
     expect(Just(2).where((_) => _.isEven).orThrow(() => 'Oops'), 2);
     expect(Nothing<int>().where((_) => _.isEven), isA<Nothing<int>>());
-
-    expect(Just(2).filter((_) => _.isEven).orThrow(() => 'Oops'), 2);
-    expect(Nothing<int>().filter((_) => _.isEven), isA<Nothing<int>>());
   });
 
   test('Default value', () {
@@ -79,8 +76,55 @@ void main() {
     expect(() => Just(null), throwsArgumentError);
   });
 
-  test('Chaining', () {
-    expect(Nothing<int>().chain(() => Just(2)).or(42), 2);
-    expect(Just(1).chain(() => Just(2)).or(42), 1);
+  test('Fallback', () {
+    expect(Nothing<int>().fallback(() => Just(2)).or(42), 2);
+    expect(Just(1).fallback(() => Just(2)).or(42), 1);
+  });
+
+  test('Chain', () {
+    expect(Nothing<int>().chain(Just(2)).or(42), 2);
+    expect(Just(1).chain(Just(2)).or(42), 1);
+  });
+
+  test('Equality', () {
+    dynamic d;
+    d = 1;
+    expect(Maybe(1) == Maybe(1), isTrue);
+    expect(Maybe(1) == Maybe(2), isFalse);
+    expect(Maybe(1) == Nothing<int>(), isFalse);
+    expect(Maybe(1) == Nothing(), isFalse);
+    expect(Maybe(d) == Nothing(), isFalse);
+    expect(Nothing<int>() == Maybe(1), isFalse);
+    expect(Nothing() == Maybe(1), isFalse);
+    expect(Nothing<int>() == Nothing<int>(), isTrue);
+    expect(Nothing() == Nothing(), isTrue);
+    expect(Nothing<int>() == Nothing(), isFalse);
+    expect(Nothing() == Nothing<String>(), isFalse);
+    expect(Nothing() == Maybe(d), isFalse);
+
+    int a;
+    String b;
+    expect(Maybe(a) == Maybe(b), isFalse);
+  });
+
+  test('HashCode', () {
+    dynamic d;
+    d = 1;
+    expect(Maybe(1).hashCode == Maybe(1).hashCode, isTrue);
+    expect(Maybe(1).hashCode == Maybe(2).hashCode, isFalse);
+    expect(Maybe(1).hashCode == Nothing<int>().hashCode, isFalse);
+    expect(Maybe(1).hashCode == Nothing().hashCode, isFalse);
+    expect(Maybe(d).hashCode == Nothing().hashCode, isFalse);
+    expect(Nothing<int>().hashCode == Maybe(1).hashCode, isFalse);
+    expect(Nothing().hashCode == Maybe(1).hashCode, isFalse);
+    expect(Nothing<int>().hashCode == Nothing<int>().hashCode, isTrue);
+    expect(Nothing().hashCode == Nothing().hashCode, isTrue);
+    expect(Nothing<int>().hashCode == Nothing().hashCode, isFalse);
+    expect(Nothing().hashCode == Nothing<String>().hashCode, isFalse);
+    expect(Nothing().hashCode == Maybe(d).hashCode, isFalse);
+
+    int a;
+    String b;
+    expect(Maybe(a).hashCode == Maybe(b).hashCode, isFalse);
   });
 }
