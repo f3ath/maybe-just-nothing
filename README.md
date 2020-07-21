@@ -14,17 +14,6 @@ doubled.ifPresent(print); // would print the doubled value of nullableValue if i
 Internally, `Maybe` is an abstract class with two implementations: `Just` and `Nothing`. 
 Both can be instantiated directly. Direct instantiation gives more precise type inference in certain cases.
 
-```dart
-final two = Just(2);
-final four = two.map((x) => x * 2); // four is inferred as Just<int>
-four.ifPresent(print); // prints "4"
-
-final nothing = Nothing<int>(); // the type parameter is optional
-final alsoNothing = nothing.map((x) => x * 2); // alsoNothing is inferred as Nothing<int>
-alsoNothing.ifPresent(print); // does nothing since the value is not present
-alsoNothing.ifNothing(() => print('Empty value')); // prints "Empty value"
-```
-
 `Just` does not accept null values:
 
 ```dart
