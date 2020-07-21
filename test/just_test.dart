@@ -21,6 +21,7 @@ void main() {
   test('Map', () {
     expect(Just(2).map((_) => _ * 2).orThrow(() => 'Oops'), 4);
     expect(Nothing<int>().map((_) => _ * 2), isA<Nothing<int>>());
+    expect(Just(2).map((_) => null), isA<Nothing<int>>());
   });
 
   test('Merge', () {

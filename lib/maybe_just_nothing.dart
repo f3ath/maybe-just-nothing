@@ -60,7 +60,7 @@ class Just<T> implements Maybe<T> {
   final T value;
 
   @override
-  Just<P> map<P>(P Function(T _) mapper) => Just(mapper(value));
+  Maybe<P> map<P>(P Function(T _) mapper) => Maybe(mapper(value));
 
   @override
   Maybe<P> flatMap<P>(Maybe<P> Function(T _) mapper) => mapper(value);

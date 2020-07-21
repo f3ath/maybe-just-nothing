@@ -5,13 +5,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [0.3.0] - 2020-07-20
+### Changed
+- Allow `map` to return a null. Hence, the BC-reaking change in `Just.map` signature.
+
 ## [0.2.0] - 2020-07-11
 ### Added
 - Method `fallback()`
 - Equality operator support
 
 ### Changed
-- Method  now accepts a value instead of a function. The old method is available as 
 - Method `chain()` now accepts a value instead of a function. The old method is available as `fallback()`
 
 ### Removed
@@ -62,7 +65,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial version.
 
-[Unreleased]: https://github.com/f3ath/maybe-just-nothing/compare/0.2.0...HEAD
+[Unreleased]: https://github.com/f3ath/maybe-just-nothing/compare/0.3.0...HEAD
+[0.3.0]: https://github.com/f3ath/maybe-just-nothing/compare/0.2.0...0.3.0
 [0.2.0]: https://github.com/f3ath/maybe-just-nothing/compare/0.1.9...0.2.0
 [0.1.9]: https://github.com/f3ath/maybe-just-nothing/compare/0.1.8...0.1.9
 [0.1.8]: https://github.com/f3ath/maybe-just-nothing/compare/0.1.7..0.1.8
