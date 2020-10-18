@@ -140,7 +140,7 @@ class Nothing<T> implements Maybe<T> {
   Nothing<T> ifPresent(void Function(T _) consumer) => this;
 
   @override
-  Nothing<T>  ifNothing(void Function() callback) {
+  Nothing<T> ifNothing(void Function() callback) {
     callback();
     return this;
   }
