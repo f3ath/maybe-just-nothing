@@ -18,9 +18,9 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install dependencies
         run: pub get
+      - name: Formatter
+        run: dartfmt --dry-run --set-exit-if-changed  example lib test
       - name: Analyzer
-        run: dart analyze --enable-experiment=non-nullable --fatal-infos --fatal-warnings lib && \
-          dart analyze --enable-experiment=non-nullable --fatal-infos --fatal-warnings test && \
-          dart analyze --enable-experiment=non-nullable --fatal-infos --fatal-warnings example
+        run: dart analyze --enable-experiment=non-nullable --fatal-infos --fatal-warnings
       - name: Tests
         run: dart --enable-experiment=non-nullable test
