@@ -3,10 +3,10 @@ import 'dart:async';
 /// A variation of the Maybe monad with eager execution.
 abstract class Maybe<T> {
   /// Creates an instance of the monadic value.
-  factory Maybe(T value) => value == null ? Nothing<T>() : Just(value);
+  factory Maybe(T? value) => value == null ? Nothing<T>() : Just(value);
 
-  /// Maps the value to P. The [mapper] function must not return null.
-  Maybe<P> map<P>(P Function(T _) mapper);
+  /// Maps the value to P.
+  Maybe<P> map<P>(P? Function(T _) mapper);
 
   /// Maps the value to P.
   Maybe<P> flatMap<P>(Maybe<P> Function(T _) mapper);
@@ -29,9 +29,8 @@ abstract class Maybe<T> {
   /// Returns the wrapped value (if present), or throws the result of the [producer] (otherwise).
   T orThrow(Object Function() producer);
 
-  /// Calls the [consumer] if the wrapped value is present. If the value is not present,
-  /// and the [otherwise] function is passed, calls it.
-  Maybe<T> ifPresent(void Function(T _) consumer, {void Function() otherwise});
+  /// Calls the [consumer] if the wrapped value is present.
+  Maybe<T> ifPresent(void Function(T _) consumer);
 
   /// Calls the [callback] function if the wrapped value is not present.
   Maybe<T> ifNothing(void Function() callback);
@@ -52,15 +51,14 @@ abstract class Maybe<T> {
 /// Represents an existing non-null value of type T.
 class Just<T> implements Maybe<T> {
   /// Throws an [ArgumentError] if the value is null.
-  Just(this.value) {
-    ArgumentError.checkNotNull(value);
-  }
+  Just(T? value)
+      : value = (value != null) ? value : throw ArgumentError.notNull();
 
   /// The wrapped value. It is guaranteed to be non-null.
   final T value;
 
   @override
-  Maybe<P> map<P>(P Function(T _) mapper) => Maybe(mapper(value));
+  Maybe<P> map<P>(P? Function(T _) mapper) => Maybe(mapper(value));
 
   @override
   Maybe<P> flatMap<P>(Maybe<P> Function(T _) mapper) => mapper(value);
@@ -81,7 +79,7 @@ class Just<T> implements Maybe<T> {
   T orThrow(Object Function() producer) => value;
 
   @override
-  Just<T> ifPresent(void Function(T _) consumer, {void Function() otherwise}) {
+  Just<T> ifPresent(void Function(T _) consumer) {
     consumer(value);
     return this;
   }
@@ -118,7 +116,7 @@ class Nothing<T> implements Maybe<T> {
   const Nothing();
 
   @override
-  Nothing<P> map<P>(P Function(T _) mapper) => Nothing<P>();
+  Nothing<P> map<P>(P? Function(T _) mapper) => Nothing<P>();
 
   @override
   Nothing<P> flatMap<P>(Maybe<P> Function(T _) mapper) => Nothing<P>();
@@ -139,11 +137,7 @@ class Nothing<T> implements Maybe<T> {
   T orThrow(Object Function() producer) => throw producer();
 
   @override
-  Nothing<T> ifPresent(void Function(T _) consumer,
-      {void Function() otherwise}) {
-    otherwise?.call();
-    return this;
-  }
+  Nothing<T> ifPresent(void Function(T _) consumer) => this;
 
   @override
   Nothing<T> ifNothing(void Function() callback) {
