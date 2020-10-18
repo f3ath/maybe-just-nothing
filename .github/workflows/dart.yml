@@ -19,6 +19,8 @@ jobs:
       - name: Install dependencies
         run: pub get
       - name: Analyzer
-        run: dart --enable-experiment=non-nullable analyze lib test example --fatal-infos --fatal-warnings
+        run: dart analyze --enable-experiment=non-nullable --fatal-infos --fatal-warnings lib && \
+          dart analyze --enable-experiment=non-nullable --fatal-infos --fatal-warnings test && \
+          dart analyze --enable-experiment=non-nullable --fatal-infos --fatal-warnings example
       - name: Tests
         run: dart --enable-experiment=non-nullable test
