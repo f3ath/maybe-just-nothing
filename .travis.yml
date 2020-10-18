@@ -3,8 +3,8 @@ dart:
   - stable
   - dev
 dart_task:
-  - test: --platform vm
-  - test: --platform chrome
-  - test: --platform firefox
+  - test: --platform vm --enable-experiment=non-nullable
+  - test: --platform chrome --enable-experiment=non-nullable
+  - test: --platform firefox --enable-experiment=non-nullable
   - dartfmt: true
   - dartanalyzer: --fatal-infos --fatal-warnings lib test example
