@@ -93,10 +93,7 @@ The intention of `Maybe` is to give it the consumer function instead of retrievi
 This is the most concise and clear way if using it.
 ```dart
 int a;
-final value = Maybe(a);
-final value.ifPresent(print);
-final value.ifPresent(print, otherwise: () {/* do something else*/});
-final value.ifNothing(() {/* do something else*/});
+Maybe(a).ifPresent(print).ifNothing(() {/* do something else*/});
 ```
 
 ## Reading the value

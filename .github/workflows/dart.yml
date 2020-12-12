@@ -1,3 +1,4 @@
+
 name: Dart CI
 
 on:
@@ -12,13 +13,15 @@ jobs:
     runs-on: ubuntu-latest
 
     container:
-      image:  google/dart:latest
+      image:  google/dart:beta
 
     steps:
       - uses: actions/checkout@v2
       - name: Install dependencies
-        run: pub get
+        run: dart pub get
+      - name: Formatter
+        run: dartfmt --dry-run --set-exit-if-changed  example lib test
       - name: Analyzer
-        run: dartanalyzer lib test example --fatal-infos --fatal-warnings
+        run: dart analyze --fatal-infos --fatal-warnings
       - name: Tests
-        run: pub run test
+        run: dart run test_coverage --no-badge --print-test-output --min-coverage 100

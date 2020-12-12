@@ -5,7 +5,7 @@ import 'package:test/test.dart';
 
 void main() {
   test('Basic getters', () async {
-    Maybe<int> oddTimes3(int number) =>
+    Maybe<int> oddTimes3(int? number) =>
         Maybe(number).where((_) => _.isOdd).map((_) => _ * 3);
 
     expect(oddTimes3(5).orThrow(() => 'Oops'), 15);
@@ -21,13 +21,13 @@ void main() {
   test('Map', () {
     expect(Just(2).map((_) => _ * 2).orThrow(() => 'Oops'), 4);
     expect(Nothing<int>().map((_) => _ * 2), isA<Nothing<int>>());
-    expect(Just(2).map((_) => null), isA<Nothing<int>>());
   });
 
   test('Merge', () {
-    expect(Just(2).merge(Just(3), (a, b) => a * b).orThrow(() => 'Oops'), 6);
-    expect(Nothing<int>().merge(Just(3), (a, b) => a * b), isA<Nothing<num>>());
-    expect(Just(2).merge(Nothing<int>(), (a, b) => a * b), isA<Nothing<num>>());
+    int add(int a, int b) => a + b;
+    expect(Just(2).merge(Just(3), add).orThrow(() => 'Oops'), 5);
+    expect(Nothing<int>().merge(Just(3), add), isA<Nothing<num>>());
+    expect(Just(2).merge(Nothing<int>(), add), isA<Nothing<num>>());
   });
 
   test('FlatMap', () {
@@ -65,16 +65,18 @@ void main() {
   });
 
   test('Consumers', () {
-    int number;
+    void throwUp() {
+      throw Exception();
+    }
+
+    int? number;
     void saveNumber(int n) => number = n;
     Nothing<int>().ifPresent(saveNumber);
     expect(number, isNull);
     Just(42).ifPresent(saveNumber);
     expect(number, 42);
-  });
-
-  test('Just(null) throws', () {
-    expect(() => Just(null), throwsArgumentError);
+    Just(42).ifNothing(throwUp);
+    expect(() => Nothing<int>().ifNothing(throwUp), throwsException);
   });
 
   test('Fallback', () {
@@ -105,8 +107,8 @@ void main() {
     expect(Nothing() == Nothing<String>(), isFalse);
     expect(Nothing() == Maybe(d), isFalse);
 
-    int a;
-    String b;
+    int? a;
+    String? b;
     // ignore: unrelated_type_equality_checks
     expect(Maybe(a) == Maybe(b), isFalse);
   });
@@ -127,8 +129,8 @@ void main() {
     expect(Nothing().hashCode == Nothing<String>().hashCode, isFalse);
     expect(Nothing().hashCode == Maybe(d).hashCode, isFalse);
 
-    int a;
-    String b;
+    int? a;
+    String? b;
     expect(Maybe(a).hashCode == Maybe(b).hashCode, isFalse);
   });
 }
