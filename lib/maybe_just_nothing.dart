@@ -41,7 +41,7 @@ abstract class Maybe<T> {
   void ifNothing(void Function() callback);
 
   /// Narrows the type to P if the value is present and has actually the type of P.
-  Maybe<P> type<P>();
+  Maybe<P> type<P extends Object>();
 
   /// If this and the other are both [Just] values, merges them using the [merger] function and returns [Just]<V>.
   /// Otherwise returns [Nothing]<V>
@@ -94,7 +94,8 @@ class Just<T> implements Maybe<T> {
       predicate(value) ? this : Nothing<T>();
 
   @override
-  Maybe<P> type<P>() => value is P ? Just(value as P) : Nothing<P>();
+  Maybe<P> type<P extends Object>() =>
+      value is P ? Just(value as P) : Nothing<P>();
 
   @override
   Maybe<R> merge<R, V>(Maybe<V> other, Merger<R, T, V> merger) =>
@@ -153,7 +154,7 @@ class Nothing<T> implements Maybe<T> {
   Nothing<T> where(bool Function(T value) predicate) => this;
 
   @override
-  Nothing<P> type<P>() => Nothing<P>();
+  Nothing<P> type<P extends Object>() => Nothing<P>();
 
   @override
   Nothing<R> merge<R, V>(Maybe<V> other, Merger<R, T, V> merger) =>
