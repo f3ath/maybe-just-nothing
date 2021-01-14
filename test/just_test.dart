@@ -4,9 +4,17 @@ import 'package:maybe_just_nothing/maybe_just_nothing.dart';
 import 'package:test/test.dart';
 
 void main() {
+  test('Instantiation', () {
+    expect(Maybe<int>(null), isA<Nothing<int>>());
+    expect(Maybe<int>(1), isA<Just<int>>());
+    expect(Maybe<int?>(null), isA<Just<int?>>());
+    expect(Maybe<int?>(1), isA<Just<int?>>());
+    expect(Maybe(1), isA<Just<int>>());
+    expect(Maybe(null), isA<Just<Null>>());
+  });
   test('Basic getters', () async {
-    Maybe<int> oddTimes3(int? number) =>
-        Maybe(number).where((_) => _.isOdd).map((_) => _ * 3);
+    Maybe<int> oddTimes3(number) =>
+        Maybe<int>(number).where((_) => _.isOdd).map((_) => _ * 3);
 
     expect(oddTimes3(5).orThrow(() => 'Oops'), 15);
     expect(await oddTimes3(5).orGetAsync(() => Future.value(100)), 15);
@@ -20,6 +28,7 @@ void main() {
 
   test('Map', () {
     expect(Just(2).map((_) => _ * 2).orThrow(() => 'Oops'), 4);
+    expect(Just<int?>(2).map((_) => null).orThrow(() => 'Oops'), null);
     expect(Nothing<int>().map((_) => _ * 2), isA<Nothing<int>>());
   });
 
@@ -31,8 +40,9 @@ void main() {
   });
 
   test('FlatMap', () {
-    expect(Just(2).flatMap((_) => Maybe(_ * 2)).orThrow(() => 'Oops'), 4);
-    expect(Nothing<int>().flatMap((_) => Maybe(_ * 2)), isA<Nothing<int>>());
+    expect(Just(2).flatMap((_) => Maybe<int>(_ * 2)).orThrow(() => 'Oops'), 4);
+    expect(
+        Nothing<int>().flatMap((_) => Maybe<int>(_ * 2)), isA<Nothing<int>>());
   });
 
   test('Filtering', () {
@@ -97,6 +107,7 @@ void main() {
     expect(Maybe(1) == Nothing<int>(), isFalse);
     // ignore: unrelated_type_equality_checks
     expect(Maybe(1) == Nothing(), isFalse);
+    // ignore: unrelated_type_equality_checks
     expect(Maybe(d) == Nothing(), isFalse);
     expect(Nothing<int>() == Maybe(1), isFalse);
     // ignore: unrelated_type_equality_checks
@@ -105,6 +116,7 @@ void main() {
     expect(Nothing() == Nothing(), isTrue);
     expect(Nothing<int>() == Nothing(), isFalse);
     expect(Nothing() == Nothing<String>(), isFalse);
+    // ignore: unrelated_type_equality_checks
     expect(Nothing() == Maybe(d), isFalse);
 
     int? a;

@@ -5,7 +5,7 @@ Or maybe it\'s just nothing?
 ## Creating maybe-values
 The most common scenario is to create a `Maybe` from a nullable value:
 ```dart
-int nullableValue;
+int? nullableValue;
 final val = Maybe(nullableValue); // Creates an instance of Maybe<int>
 final doubled = val.map((x) => x * 2);
 doubled.ifPresent(print); // would print the doubled value of nullableValue if it's not null
