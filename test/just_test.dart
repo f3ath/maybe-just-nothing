@@ -7,10 +7,11 @@ void main() {
   test('Instantiation', () {
     expect(Maybe<int>(null), isA<Nothing<int>>());
     expect(Maybe<int>(1), isA<Just<int>>());
-    expect(Maybe<int?>(null), isA<Just<int?>>());
-    expect(Maybe<int?>(1), isA<Just<int?>>());
     expect(Maybe(1), isA<Just<int>>());
-    expect(Maybe(null), isA<Just<Null>>());
+    int? a;
+    expect(Maybe(a), isA<Nothing<int>>());
+    a = 42;
+    expect(Maybe(a), isA<Just<int>>());
   });
   test('Basic getters', () async {
     Maybe<int> oddTimes3(number) =>
@@ -28,7 +29,6 @@ void main() {
 
   test('Map', () {
     expect(Just(2).map((_) => _ * 2).orThrow(() => 'Oops'), 4);
-    expect(Just<int?>(2).map((_) => null).orThrow(() => 'Oops'), null);
     expect(Nothing<int>().map((_) => _ * 2), isA<Nothing<int>>());
   });
 

@@ -1,20 +1,21 @@
 import 'dart:async';
 
 /// A variation of the Maybe monad with eager execution.
-abstract class Maybe<T> {
+abstract class Maybe<T extends Object> {
   /// Creates an instance of the monadic value.
   /// Always specify the generic type explicitly.
   /// Example:
   /// ```dart
   /// final maybeInt = Maybe<int>(value); // returns Just<int> if value is int
   /// final maybeString = Maybe<String?>(value); // returns Just<String?> if value is String or null
+  /// ```
   factory Maybe(T? value) => value is T ? Just<T>(value) : Nothing<T>();
 
   /// Maps the value to P.
-  Maybe<P> map<P>(P Function(T value) mapper);
+  Maybe<P> map<P extends Object>(P Function(T value) mapper);
 
   /// Maps the value to P.
-  Maybe<P> flatMap<P>(Maybe<P> Function(T value) mapper);
+  Maybe<P> flatMap<P extends Object>(Maybe<P> Function(T value) mapper);
 
   /// Filter the value using the [predicate].
   Maybe<T> where(bool Function(T value) predicate);
@@ -45,7 +46,8 @@ abstract class Maybe<T> {
 
   /// If this and the other are both [Just] values, merges them using the [merger] function and returns [Just]<V>.
   /// Otherwise returns [Nothing]<V>
-  Maybe<R> merge<R, V>(Maybe<V> other, Merger<R, T, V> merger);
+  Maybe<R> merge<R extends Object, V extends Object>(
+      Maybe<V> other, Merger<R, T, V> merger);
 
   /// If this is [Nothing], returns the result of [next]. Otherwise return this..
   Maybe<T> fallback(Maybe<T> Function() next);
@@ -55,18 +57,19 @@ abstract class Maybe<T> {
 }
 
 /// Represents an existing value of type T.
-class Just<T> implements Maybe<T> {
-  /// Throws an [ArgumentError] if the value is null.
+class Just<T extends Object> implements Maybe<T> {
   Just(this.value);
 
-  /// The wrapped value. It is guaranteed to be non-null.
+  /// The wrapped value.
   final T value;
 
   @override
-  Maybe<P> map<P>(P Function(T value) mapper) => Just<P>(mapper(value));
+  Maybe<P> map<P extends Object>(P Function(T value) mapper) =>
+      Just<P>(mapper(value));
 
   @override
-  Maybe<P> flatMap<P>(Maybe<P> Function(T value) mapper) => mapper(value);
+  Maybe<P> flatMap<P extends Object>(Maybe<P> Function(T value) mapper) =>
+      mapper(value);
 
   @override
   T or(T defaultValue) => value;
@@ -98,7 +101,8 @@ class Just<T> implements Maybe<T> {
       value is P ? Just(value as P) : Nothing<P>();
 
   @override
-  Maybe<R> merge<R, V>(Maybe<V> other, Merger<R, T, V> merger) =>
+  Maybe<R> merge<R extends Object, V extends Object>(
+          Maybe<V> other, Merger<R, T, V> merger) =>
       flatMap((a) => other.map((b) => merger(a, b)));
 
   @override
@@ -117,14 +121,15 @@ class Just<T> implements Maybe<T> {
 typedef Merger<R, T, V> = R Function(T a, V b);
 
 /// Represents a non-existing value of type T.
-class Nothing<T> implements Maybe<T> {
+class Nothing<T extends Object> implements Maybe<T> {
   const Nothing();
 
   @override
-  Nothing<P> map<P>(P Function(T value) mapper) => Nothing<P>();
+  Nothing<P> map<P extends Object>(P Function(T value) mapper) => Nothing<P>();
 
   @override
-  Nothing<P> flatMap<P>(Maybe<P> Function(T value) mapper) => Nothing<P>();
+  Nothing<P> flatMap<P extends Object>(Maybe<P> Function(T value) mapper) =>
+      Nothing<P>();
 
   @override
   T or(T defaultValue) => defaultValue;
@@ -142,13 +147,10 @@ class Nothing<T> implements Maybe<T> {
   T orThrow(Object Function() producer) => throw producer();
 
   @override
-  Nothing<T> ifPresent(void Function(T value) consumer) => this;
+  void ifPresent(void Function(T value) consumer) {}
 
   @override
-  Nothing<T> ifNothing(void Function() callback) {
-    callback();
-    return this;
-  }
+  void ifNothing(void Function() callback) => callback();
 
   @override
   Nothing<T> where(bool Function(T value) predicate) => this;
@@ -157,7 +159,8 @@ class Nothing<T> implements Maybe<T> {
   Nothing<P> type<P extends Object>() => Nothing<P>();
 
   @override
-  Nothing<R> merge<R, V>(Maybe<V> other, Merger<R, T, V> merger) =>
+  Nothing<R> merge<R extends Object, V extends Object>(
+          Maybe<V> other, Merger<R, T, V> merger) =>
       Nothing<R>();
 
   @override
