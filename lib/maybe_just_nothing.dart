@@ -1,16 +1,7 @@
 import 'dart:async';
 
 /// A variation of the Maybe monad with eager execution.
-abstract class Maybe<T extends Object> {
-  /// Creates an instance of the monadic value.
-  /// Always specify the generic type explicitly.
-  /// Example:
-  /// ```dart
-  /// final maybeInt = Maybe<int>(value); // returns Just<int> if value is int
-  /// final maybeString = Maybe<String?>(value); // returns Just<String?> if value is String or null
-  /// ```
-  factory Maybe(T? value) => value is T ? Just<T>(value) : Nothing<T>();
-
+abstract class Maybe<T extends Object?> {
   /// Maps the value to P.
   Maybe<P> map<P extends Object>(P Function(T value) mapper);
 
@@ -57,7 +48,7 @@ abstract class Maybe<T extends Object> {
 }
 
 /// Represents an existing value of type T.
-class Just<T extends Object> implements Maybe<T> {
+class Just<T extends Object?> implements Maybe<T> {
   Just(this.value);
 
   /// The wrapped value.
@@ -121,7 +112,7 @@ class Just<T extends Object> implements Maybe<T> {
 typedef Merger<R, T, V> = R Function(T a, V b);
 
 /// Represents a non-existing value of type T.
-class Nothing<T extends Object> implements Maybe<T> {
+class Nothing<T extends Object?> implements Maybe<T> {
   const Nothing();
 
   @override

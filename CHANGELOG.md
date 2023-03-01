@@ -4,7 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## 0.5.0-beta - 2023-02-28
+### Changed
+- BC-BREAKING. The default generic type of `Maybe` is a nullable object `Object?`.
+
+### Removed
+- BC-BREAKING. `Maybe` does not have a constructor anymore.
+
 ## [0.4.0] - 2021-03-14
 ### Changed
 - This is a BC-breaking change to support null safety. Please refer to the tests and documentation.
@@ -74,7 +80,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial version.
 
-[Unreleased]: https://github.com/f3ath/maybe-just-nothing/compare/0.4.0...HEAD
 [0.4.0]: https://github.com/f3ath/maybe-just-nothing/compare/0.3.1...0.4.0
 [0.3.1]: https://github.com/f3ath/maybe-just-nothing/compare/0.3.0...0.3.1
 [0.3.0]: https://github.com/f3ath/maybe-just-nothing/compare/0.2.0...0.3.0
