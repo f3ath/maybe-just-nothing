@@ -3,10 +3,10 @@ import 'dart:async';
 /// A variation of the Maybe monad with eager execution.
 abstract class Maybe<T extends Object?> {
   /// Maps the value to P.
-  Maybe<P> map<P extends Object>(P Function(T value) mapper);
+  Maybe<P> map<P extends Object?>(P Function(T value) mapper);
 
   /// Maps the value to P.
-  Maybe<P> flatMap<P extends Object>(Maybe<P> Function(T value) mapper);
+  Maybe<P> flatMap<P extends Object?>(Maybe<P> Function(T value) mapper);
 
   /// Filter the value using the [predicate].
   Maybe<T> where(bool Function(T value) predicate);
@@ -33,11 +33,11 @@ abstract class Maybe<T extends Object?> {
   void ifNothing(void Function() callback);
 
   /// Narrows the type to P if the value is present and has actually the type of P.
-  Maybe<P> type<P extends Object>();
+  Maybe<P> type<P extends Object?>();
 
   /// If this and the other are both [Just] values, merges them using the [merger] function and returns [Just]<V>.
   /// Otherwise returns [Nothing]<V>
-  Maybe<R> merge<R extends Object, V extends Object>(
+  Maybe<R> merge<R extends Object, V extends Object?>(
       Maybe<V> other, Merger<R, T, V> merger);
 
   /// If this is [Nothing], returns the result of [next]. Otherwise return this..
@@ -55,11 +55,11 @@ class Just<T extends Object?> implements Maybe<T> {
   final T value;
 
   @override
-  Maybe<P> map<P extends Object>(P Function(T value) mapper) =>
+  Maybe<P> map<P extends Object?>(P Function(T value) mapper) =>
       Just<P>(mapper(value));
 
   @override
-  Maybe<P> flatMap<P extends Object>(Maybe<P> Function(T value) mapper) =>
+  Maybe<P> flatMap<P extends Object?>(Maybe<P> Function(T value) mapper) =>
       mapper(value);
 
   @override
@@ -88,11 +88,11 @@ class Just<T extends Object?> implements Maybe<T> {
       predicate(value) ? this : Nothing<T>();
 
   @override
-  Maybe<P> type<P extends Object>() =>
+  Maybe<P> type<P extends Object?>() =>
       value is P ? Just(value as P) : Nothing<P>();
 
   @override
-  Maybe<R> merge<R extends Object, V extends Object>(
+  Maybe<R> merge<R extends Object, V extends Object?>(
           Maybe<V> other, Merger<R, T, V> merger) =>
       flatMap((a) => other.map((b) => merger(a, b)));
 
@@ -116,10 +116,10 @@ class Nothing<T extends Object?> implements Maybe<T> {
   const Nothing();
 
   @override
-  Nothing<P> map<P extends Object>(P Function(T value) mapper) => Nothing<P>();
+  Nothing<P> map<P extends Object?>(P Function(T value) mapper) => Nothing<P>();
 
   @override
-  Nothing<P> flatMap<P extends Object>(Maybe<P> Function(T value) mapper) =>
+  Nothing<P> flatMap<P extends Object?>(Maybe<P> Function(T value) mapper) =>
       Nothing<P>();
 
   @override
@@ -147,10 +147,10 @@ class Nothing<T extends Object?> implements Maybe<T> {
   Nothing<T> where(bool Function(T value) predicate) => this;
 
   @override
-  Nothing<P> type<P extends Object>() => Nothing<P>();
+  Nothing<P> type<P extends Object?>() => Nothing<P>();
 
   @override
-  Nothing<R> merge<R extends Object, V extends Object>(
+  Nothing<R> merge<R extends Object, V extends Object?>(
           Maybe<V> other, Merger<R, T, V> merger) =>
       Nothing<R>();
 

@@ -62,6 +62,7 @@ void main() {
     a = null;
     expect(Just(a).type<int>(), isA<Nothing<int>>());
     expect(Just(a).type<bool>(), isA<Nothing<bool>>());
+    expect(Nothing<int>().type<bool>(), isA<Nothing<bool>>());
   });
 
   test('Default value producer', () {
