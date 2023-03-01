@@ -3,43 +3,56 @@ Yet another variation of the good old Maybe monad with eager execution written i
 Or maybe it\'s just nothing?
 
 ## Creating maybe-values
-The most common scenario is to create a `Maybe` from a nullable value:
+Internally, `Maybe` is an abstract class with two implementations: `Just` and `Nothing`.
+Both can be instantiated directly.
+
+The most common scenario is discarding null from nullable values:
 ```dart
 int? nullableValue;
-final val = Maybe(nullableValue); // val is either Just<int> or Nothing<int>
+final val = Just(nullableValue).type<int>(); // val is either Just<int> or Nothing<int>
 final doubled = val.map((x) => x * 2);
 doubled.ifPresent(print); // would print the doubled value of nullableValue if it's not null
 ```
 
-`Maybe` supports nullable generic types. If you want a nullable type, specify it explicitly.
+Nullable values can also be wrapped in `Just`:
 ```dart
 int? nullableValue;
-final val = Maybe<int?>(nullableValue); // val is Just<int?>
+final val = Just(nullableValue); // val is Just<int?>
 final justNull = Maybe(null); // creates Just<Null>
 ```
 
-Internally, `Maybe` is an abstract class with two implementations: `Just` and `Nothing`. 
-Both can be instantiated directly.
+The `Nothing` value may be created either typed or untyped:
+```dart
+final nothing1 = Nothing(); // Nothing<Object?>
+final nothing2 = Nothing<int>(); // Nothing<int>
+final nothing3 = Nothing<String?>(); // Nothing<String?>
+```
+
+You may even distinguish between presence and absence of `null`s themselves:
+```dart
+Maybe<Null> yay = Just(null); // Just<Null>
+Maybe<Null> nay = Nothing<Null>(); // Nothing<Null>
+```
 
 ## Mapping values
 Mapping means transformation of the wrapped value by applying a function. 
 Since `Maybe` itself is immutable, mapping operations do not actually modify the value.
 Instead, they always return another `Maybe`. 
 ```dart
-Maybe(2).map((x) => x * 2).ifPresent(print); // prints "4"
+Just(2).map((x) => x * 2).ifPresent(print); // prints "4"
 ```
 
 If the mapping function also returns a `Maybe`, use `flatMap()`:
 ```dart
-Maybe<int> triple(int? x) => Maybe(x).map((x) => x * 3);
+Maybe<int> triple(int x) => Just(x).map((x) => x * 3);
 
-Maybe(2).flatMap(triple).ifPresent(print); // prints "6"
+Just(2).flatMap(triple).ifPresent(print); // prints "6"
 ```
 
 An operation on two maybe-values can be performed using `merge()`:
 ```dart
-final two = Maybe(2);
-final three = Maybe(3);
+final two = Just(2);
+final three = Just(3);
 
 two.merge(three, (x, y) => x + y).ifPresent(print); // prints "5"
 ```
@@ -48,16 +61,16 @@ two.merge(three, (x, y) => x + y).ifPresent(print); // prints "5"
 Filtering is checking whether the maybe-value satisfies a certain condition. If it does, 
 the value remains intact, otherwise `Nothing` is returned. 
 
-To filter bu the value itself, use the `where()`: 
+To filter by the value itself, use the `where()`: 
 ```dart
-Maybe(2).where((x) => x.isEven).ifPresent(print); // prints "2"
-Maybe(3).where((x) => x.isEven).ifPresent(print); // 3 is odd, so nothing happens
+Just(2).where((x) => x.isEven).ifPresent(print); // prints "2"
+Just(3).where((x) => x.isEven).ifPresent(print); // 3 is odd, so nothing happens
 ```
 
 To filter by type, use `type<T>()`:
 ```dart
-final maybeInt = Maybe(2).type<int>(); // Just<int>
-final maybeString = Maybe(2).type<String>(); // Nothing<String>
+final maybeInt = Just(2).type<int>(); // Just<int>
+final maybeString = Just(2).type<String>(); // Nothing<String>
 ```
 
 ## Fallback chain
@@ -71,21 +84,18 @@ They will be called in sequence until a `Just` value is received.
 
 
 ```dart
-int? a;
-int? b;
-int? c;
-b = 2;
-c = 3;
 
-Maybe(a) // this one is Nothing
-  .chain(Maybe(b)) // this value is not empty, so it will be used
-  .chain(Maybe(c)) // this value will NOT be used
+Nothing<int>()
+  .chain(Nothing<int>()) // this will be skipped
+  .chain(Just(2)) // this value is not empty, so it will be used
+  .chain(Just(3)) // this value will NOT be used
   .ifPresent(print); // prints "2"
 
 // Same with fallback()
-Maybe(a) // this one is Nothing
-  .fallback(() => Maybe(b)) // this function returns a non-empty value
-  .fallback(() => Maybe(c)) // this function will NOT be called
+Nothing<int>()
+  .fallback(() => Nothing<int>()) // this result will be skipped
+  .fallback(() => Just(2)) // this function returns a non-empty value
+  .fallback(() => Just(3)) // this function will NOT be called
   .ifPresent(print); // prints "2"
 ```
 
@@ -93,8 +103,8 @@ Maybe(a) // this one is Nothing
 The intention of `Maybe` is to give it the consumer function instead of retrieving the value.
 This is the most concise and clear way of using it.
 ```dart
-int? a;
-Maybe(a)
+Maybe a;
+a
   ..ifPresent(print)
   ..ifNothing(() {/* do something else*/});
 ```
@@ -105,31 +115,30 @@ Sometimes, however, you need the actual value. In such cases you'll have to prov
 In the simplest scenario, use `or()`:
 
 ```dart
-int? a;
-final value = Maybe(a).or(0); // value is 0
-final valueFromFuture = await Maybe(a).orAsync(Future.value(0)); // value is 0
+Maybe<int> a;
+final value = a.or(0); // value is 0
+final valueFromFuture = await a.orAsync(Future.value(0)); // value is 0
 ```
 
 A provider function can be specified instead of the default value:
 
 ```dart
-int? a;
-final value = Maybe(a).orGet(() => 0); // value is 0
-final valueFromFuture = await Maybe(a).orGetAsync(() async => 0); // value is 0
+Maybe<int> a;
+final value = a.orGet(() => 0); // value is 0
+final valueFromFuture = await a.orGetAsync(() async => 0); // value is 0
 ```
 
 If there is no default value, an exception can be thrown:
 
 ```dart
-int? a;
-final value = Maybe(a).orThrow(() => 'Oops!');
+Maybe<int> a;
+final value = a.orThrow(() => 'Oops!');
 ```
 
 In some rare cases, it can be convenient to check for emptiness directly:
 
 ```dart
-int? a;
-final myInt = Maybe(a);
+Maybe<int> myInt;
 
 if (myInt is Just<int>) {
   print(myInt.value); // .value is guaranteed to be non-null

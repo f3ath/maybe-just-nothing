@@ -4,18 +4,18 @@ import 'package:maybe_just_nothing/maybe_just_nothing.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test('Instantiation', () {
-    expect(Maybe<int>(null), isA<Nothing<int>>());
-    expect(Maybe<int>(1), isA<Just<int>>());
-    expect(Maybe(1), isA<Just<int>>());
-    int? a;
-    expect(Maybe(a), isA<Nothing<int>>());
-    a = 42;
-    expect(Maybe(a), isA<Just<int>>());
+  test('Generics', () {
+    expect(Nothing<num>(), isA<Nothing<num>>());
+    expect(Nothing<num?>(), isA<Nothing<num?>>());
+    expect(Nothing<Null>(), isA<Nothing<Null>>());
+
+    expect(Nothing<Null>(), isA<Maybe<Null>>());
+    expect(Just(null), isA<Maybe<Null>>());
   });
+
   test('Basic getters', () async {
     Maybe<int> oddTimes3(number) =>
-        Maybe<int>(number).where((_) => _.isOdd).map((_) => _ * 3);
+        Just(number).type<int>().where((_) => _.isOdd).map((_) => _ * 3);
 
     expect(oddTimes3(5).orThrow(() => 'Oops'), 15);
     expect(await oddTimes3(5).orGetAsync(() => Future.value(100)), 15);
@@ -40,9 +40,8 @@ void main() {
   });
 
   test('FlatMap', () {
-    expect(Just(2).flatMap((_) => Maybe<int>(_ * 2)).orThrow(() => 'Oops'), 4);
-    expect(
-        Nothing<int>().flatMap((_) => Maybe<int>(_ * 2)), isA<Nothing<int>>());
+    expect(Just(2).flatMap((_) => Just(_ * 2)).orThrow(() => 'Oops'), 4);
+    expect(Nothing<int>().flatMap((_) => Just(_ * 2)), isA<Nothing<int>>());
   });
 
   test('Filtering', () {
@@ -57,12 +56,13 @@ void main() {
 
   test('Cast', () {
     dynamic a = 2;
-    expect(Maybe(a).type<int>(), isA<Just<int>>());
-    expect(Maybe(a).type<String>(), isA<Nothing<String>>());
-    expect(Maybe(a).type<int>().orThrow(() => 'Oops'), 2);
+    expect(Just(a).type<int>(), isA<Just<int>>());
+    expect(Just(a).type<String>(), isA<Nothing<String>>());
+    expect(Just(a).type<int>().orThrow(() => 'Oops'), 2);
     a = null;
-    expect(Maybe(a).type<int>(), isA<Nothing<int>>());
-    expect(Maybe(a).type<bool>(), isA<Nothing<bool>>());
+    expect(Just(a).type<int>(), isA<Nothing<int>>());
+    expect(Just(a).type<bool>(), isA<Nothing<bool>>());
+    expect(Nothing<int>().type<bool>(), isA<Nothing<bool>>());
   });
 
   test('Default value producer', () {
@@ -102,47 +102,49 @@ void main() {
   test('Equality', () {
     dynamic d;
     d = 1;
-    expect(Maybe(1) == Maybe(1), isTrue);
-    expect(Maybe(1) == Maybe(2), isFalse);
-    expect(Maybe(1) == Nothing<int>(), isFalse);
+    expect(Just(1) == Just(1), isTrue);
+    expect(Just(1) == Just(2), isFalse);
     // ignore: unrelated_type_equality_checks
-    expect(Maybe(1) == Nothing(), isFalse);
+    expect(Just(1) == Nothing<int>(), isFalse);
     // ignore: unrelated_type_equality_checks
-    expect(Maybe(d) == Nothing(), isFalse);
-    expect(Nothing<int>() == Maybe(1), isFalse);
+    expect(Just(1) == Nothing(), isFalse);
     // ignore: unrelated_type_equality_checks
-    expect(Nothing() == Maybe(1), isFalse);
+    expect(Just(d) == Nothing(), isFalse);
+    // ignore: unrelated_type_equality_checks
+    expect(Nothing<int>() == Just(1), isFalse);
+    // ignore: unrelated_type_equality_checks
+    expect(Nothing() == Just(1), isFalse);
     expect(Nothing<int>() == Nothing<int>(), isTrue);
     expect(Nothing() == Nothing(), isTrue);
     expect(Nothing<int>() == Nothing(), isFalse);
     expect(Nothing() == Nothing<String>(), isFalse);
     // ignore: unrelated_type_equality_checks
-    expect(Nothing() == Maybe(d), isFalse);
+    expect(Nothing() == Just(d), isFalse);
 
     int? a;
     String? b;
     // ignore: unrelated_type_equality_checks
-    expect(Maybe(a) == Maybe(b), isFalse);
+    expect(Just(a) == Just(b), isFalse);
   });
 
   test('HashCode', () {
     dynamic d;
     d = 1;
-    expect(Maybe(1).hashCode == Maybe(1).hashCode, isTrue);
-    expect(Maybe(1).hashCode == Maybe(2).hashCode, isFalse);
-    expect(Maybe(1).hashCode == Nothing<int>().hashCode, isFalse);
-    expect(Maybe(1).hashCode == Nothing().hashCode, isFalse);
-    expect(Maybe(d).hashCode == Nothing().hashCode, isFalse);
-    expect(Nothing<int>().hashCode == Maybe(1).hashCode, isFalse);
-    expect(Nothing().hashCode == Maybe(1).hashCode, isFalse);
+    expect(Just(1).hashCode == Just(1).hashCode, isTrue);
+    expect(Just(1).hashCode == Just(2).hashCode, isFalse);
+    expect(Just(1).hashCode == Nothing<int>().hashCode, isFalse);
+    expect(Just(1).hashCode == Nothing().hashCode, isFalse);
+    expect(Just(d).hashCode == Nothing().hashCode, isFalse);
+    expect(Nothing<int>().hashCode == Just(1).hashCode, isFalse);
+    expect(Nothing().hashCode == Just(1).hashCode, isFalse);
     expect(Nothing<int>().hashCode == Nothing<int>().hashCode, isTrue);
     expect(Nothing().hashCode == Nothing().hashCode, isTrue);
     expect(Nothing<int>().hashCode == Nothing().hashCode, isFalse);
     expect(Nothing().hashCode == Nothing<String>().hashCode, isFalse);
-    expect(Nothing().hashCode == Maybe(d).hashCode, isFalse);
+    expect(Nothing().hashCode == Just(d).hashCode, isFalse);
 
     int? a;
     String? b;
-    expect(Maybe(a).hashCode == Maybe(b).hashCode, isFalse);
+    expect(Just(a).hashCode == Just(b).hashCode, isTrue);
   });
 }
