@@ -9,21 +9,20 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     container:
-      image:  google/dart:latest
-
+      image:  dart:stable
     steps:
       - uses: actions/checkout@v2
+      - name: Print Dart version
+        run: dart --version
       - name: Install dependencies
         run: dart pub get
       - name: Formatter
-        run: dartfmt --dry-run --set-exit-if-changed  example lib test
+        run: dart format --output none --set-exit-if-changed example lib test
       - name: Analyzer
         run: dart analyze --fatal-infos --fatal-warnings
       - name: Tests
-        run: dart test --coverage=coverage
+        run: dart test --coverage=.coverage
       - name: Coverage
-        run: dart run coverage:format_coverage -l -c -i coverage --report-on=lib --packages=.packages | dart run check_coverage:check_coverage
+        run: dart run coverage:format_coverage -l -c -i .coverage --report-on=lib --packages=.dart_tool/package_config.json | dart run check_coverage:check_coverage
