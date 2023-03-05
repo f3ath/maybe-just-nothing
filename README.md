@@ -1,12 +1,11 @@
 # Maybe Just Nothing
 Yet another variation of the good old Maybe monad with eager execution written in Dart. 
-Or maybe it\'s just nothing?
 
 ## Creating maybe-values
 Internally, `Maybe` is an abstract class with two implementations: `Just` and `Nothing`.
-Both can be instantiated directly.
 
-The most common scenario is discarding null from nullable values:
+
+The most common scenario is probably discarding null from nullable values:
 ```dart
 int? nullableValue;
 final val = Just(nullableValue).type<int>(); // val is either Just<int> or Nothing<int>
@@ -18,7 +17,7 @@ Nullable values can also be wrapped in `Just`:
 ```dart
 int? nullableValue;
 final val = Just(nullableValue); // val is Just<int?>
-final justNull = Maybe(null); // creates Just<Null>
+final justNull = Maybe(null); // creates Just<void>
 ```
 
 The `Nothing` value may be created either typed or untyped:
@@ -30,8 +29,8 @@ final nothing3 = Nothing<String?>(); // Nothing<String?>
 
 You may even distinguish between presence and absence of `null`s themselves:
 ```dart
-Maybe<Null> yay = Just(null); // Just<Null>
-Maybe<Null> nay = Nothing<Null>(); // Nothing<Null>
+Maybe<void> yay = Just(null); // Just<Null>
+Maybe<void> nay = Nothing<void>(); // Nothing<Null>
 ```
 
 ## Mapping values

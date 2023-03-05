@@ -7,10 +7,16 @@ void main() {
   test('Generics', () {
     expect(Nothing<num>(), isA<Nothing<num>>());
     expect(Nothing<num?>(), isA<Nothing<num?>>());
-    expect(Nothing<Null>(), isA<Nothing<Null>>());
+    expect(Nothing<void>(), isA<Nothing<void>>());
 
-    expect(Nothing<Null>(), isA<Maybe<Null>>());
-    expect(Just(null), isA<Maybe<Null>>());
+    expect(Nothing<void>(), isA<Maybe<void>>());
+    expect(Just(null), isA<Maybe<void>>());
+  });
+
+  test('Const values', () {
+    expect(const Nothing<num>(), isA<Maybe<num>>());
+    expect(const Just(null), isA<Maybe<void>>());
+    expect(const Just('foo'), isA<Maybe<String>>());
   });
 
   test('Basic getters', () async {
@@ -30,6 +36,14 @@ void main() {
   test('Map', () {
     expect(Just(2).map((_) => _ * 2).orThrow(() => 'Oops'), 4);
     expect(Nothing<int>().map((_) => _ * 2), isA<Nothing<int>>());
+  });
+
+  test('TryMap', () {
+    T single<T>(List<T> list) => list.single;
+    expect(Just([]).tryMap(single), isA<Nothing>());
+    expect(Just([2]).tryMap(single).orThrow(() => 'Oops'), 2);
+    expect(Just([1, 2]).tryMap(single), isA<Nothing<int>>());
+    expect(Nothing<List>().tryMap(single), isA<Nothing>());
   });
 
   test('Merge', () {
