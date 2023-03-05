@@ -4,9 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 0.5.0-beta - 2023-02-28
+## [0.5.0] - 2023-03-04
+### Added
+- tryMap() method
+
 ### Changed
-- BC-BREAKING. The default generic type of `Maybe` is a nullable object `Object?`.
+- BC-BREAKING. The generic type of `Maybe` is made unbounded.
 
 ### Removed
 - BC-BREAKING. `Maybe` does not have a constructor anymore.
@@ -80,6 +83,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial version.
 
+[0.5.0]: https://github.com/f3ath/maybe-just-nothing/compare/0.4.0...0.5.0
 [0.4.0]: https://github.com/f3ath/maybe-just-nothing/compare/0.3.1...0.4.0
 [0.3.1]: https://github.com/f3ath/maybe-just-nothing/compare/0.3.0...0.3.1
 [0.3.0]: https://github.com/f3ath/maybe-just-nothing/compare/0.2.0...0.3.0
