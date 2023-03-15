@@ -53,6 +53,14 @@ void main() {
     expect(Just(2).merge(Nothing<int>(), add), isA<Nothing<num>>());
   });
 
+  test('Merge2', () {
+    int add(int a, int b, int c) => a + b + c;
+    expect(Just(2).merge2(Just(3), Just(4), add).orThrow(() => 'Oops'), 9);
+    expect(Nothing<int>().merge2(Just(3), Just(4), add), isA<Nothing<num>>());
+    expect(Just(2).merge2(Nothing<int>(), Just(4), add), isA<Nothing<num>>());
+    expect(Just(2).merge2(Just(4), Nothing<int>(), add), isA<Nothing<num>>());
+  });
+
   test('FlatMap', () {
     expect(Just(2).flatMap((_) => Just(_ * 2)).orThrow(() => 'Oops'), 4);
     expect(Nothing<int>().flatMap((_) => Just(_ * 2)), isA<Nothing<int>>());
