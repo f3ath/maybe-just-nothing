@@ -30,10 +30,13 @@ class Nothing<T> implements Maybe<T> {
   T orThrow(Object Function() producer) => throw producer();
 
   @override
-  void ifPresent(void Function(T value) consumer) {}
+  Nothing<T> ifPresent(void Function(T value) consumer) => this;
 
   @override
-  void ifNothing(void Function() callback) => callback();
+  Nothing<T> ifNothing(void Function() callback) {
+    callback();
+    return this;
+  }
 
   @override
   Nothing<T> where(bool Function(T value) predicate) => this;
@@ -45,7 +48,7 @@ class Nothing<T> implements Maybe<T> {
   Nothing<R> merge<R, V>(Maybe<V> other, Merger<R, T, V> merger) => Nothing();
 
   @override
-  Maybe<R> merge2<R, V1, V2>(
+  Nothing<R> merge2<R, V1, V2>(
           Maybe<V1> v1, Maybe<V2> v2, Merger2<R, T, V1, V2> merger) =>
       Nothing();
 
@@ -54,6 +57,9 @@ class Nothing<T> implements Maybe<T> {
 
   @override
   Maybe<T> chain(Maybe<T> next) => next;
+
+  @override
+  Nothing<R> as<R>() => Nothing();
 
   @override
   bool operator ==(other) => other.runtimeType == runtimeType;
