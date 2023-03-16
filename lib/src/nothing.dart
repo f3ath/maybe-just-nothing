@@ -1,5 +1,5 @@
-import 'package:maybe_just_nothing/maybe.dart';
-import 'package:maybe_just_nothing/merger.dart';
+import 'package:maybe_just_nothing/src/maybe.dart';
+import 'package:maybe_just_nothing/src/merger.dart';
 
 /// Represents a non-existing value of type T.
 class Nothing<T> implements Maybe<T> {

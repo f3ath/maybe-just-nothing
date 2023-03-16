@@ -1,4 +1,4 @@
-import 'package:maybe_just_nothing/merger.dart';
+import 'package:maybe_just_nothing/src/merger.dart';
 
 /// A variation of the Maybe monad with eager execution.
 abstract class Maybe<T> {
