@@ -1,6 +1,6 @@
-import 'package:maybe_just_nothing/maybe.dart';
-import 'package:maybe_just_nothing/merger.dart';
-import 'package:maybe_just_nothing/nothing.dart';
+import 'package:maybe_just_nothing/src/maybe.dart';
+import 'package:maybe_just_nothing/src/merger.dart';
+import 'package:maybe_just_nothing/src/nothing.dart';
 
 /// Represents an existing value of type T.
 class Just<T> implements Maybe<T> {
