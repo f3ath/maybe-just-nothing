@@ -121,6 +121,11 @@ void main() {
     expect(Just(1).chain(Just(2)).or(42), 1);
   });
 
+  test('As', () {
+    expect(Just<Object>(2).as<int>().orThrow(() => 'oops'), isA<int>());
+    expect(Nothing<Object>().as<int>().or(2), isA<int>());
+  });
+
   test('Equality', () {
     dynamic d;
     d = 1;

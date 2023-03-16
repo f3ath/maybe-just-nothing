@@ -40,17 +40,20 @@ class Just<T> implements Maybe<T> {
   T orThrow(Object Function() producer) => value;
 
   @override
-  void ifPresent(void Function(T value) consumer) => consumer(value);
+  Maybe<T> ifPresent(void Function(T value) consumer) {
+    consumer(value);
+    return this;
+  }
 
   @override
-  void ifNothing(void Function() callback) {}
+  Maybe<T> ifNothing(void Function() callback) => this;
 
   @override
   Maybe<T> where(bool Function(T value) predicate) =>
       predicate(value) ? this : Nothing();
 
   @override
-  Maybe<P> type<P>() => value is P ? Just(value as P) : Nothing();
+  Maybe<P> type<P>() => value is P ? (as<P>()) : Nothing();
 
   @override
   Maybe<R> merge<R, V>(Maybe<V> other, Merger<R, T, V> merger) =>
@@ -66,6 +69,9 @@ class Just<T> implements Maybe<T> {
 
   @override
   Maybe<T> chain(Maybe<T> next) => this;
+
+  @override
+  Maybe<R> as<R>() => Just(value as R);
 
   @override
   bool operator ==(other) => other is Just<T> && other.value == value;

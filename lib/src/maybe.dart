@@ -31,10 +31,10 @@ abstract class Maybe<T> {
   T orThrow(Object Function() producer);
 
   /// Calls the [consumer] if the wrapped value is present.
-  void ifPresent(void Function(T value) consumer);
+  Maybe<T> ifPresent(void Function(T value) consumer);
 
   /// Calls the [callback] function if the wrapped value is not present.
-  void ifNothing(void Function() callback);
+  Maybe<T> ifNothing(void Function() callback);
 
   /// Narrows the type to P if the value is present and has actually the type of P.
   Maybe<P> type<P>();
@@ -52,4 +52,8 @@ abstract class Maybe<T> {
 
   /// If this is [Nothing], returns [next]. Otherwise return this..
   Maybe<T> chain(Maybe<T> next);
+
+  /// WARNING! This method is experimental and may be removed in the future versions.
+  /// Forceful typecast to [R].
+  Maybe<R> as<R>();
 }
