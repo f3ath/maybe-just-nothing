@@ -53,7 +53,7 @@ class Just<T> implements Maybe<T> {
       predicate(value) ? this : Nothing();
 
   @override
-  Maybe<P> type<P>() => value is P ? (as<P>()) : Nothing();
+  Maybe<P> type<P>() => value is P ? Just(value as P) : Nothing();
 
   @override
   Maybe<R> merge<R, V>(Maybe<V> other, Merger<R, T, V> merger) =>
@@ -69,9 +69,6 @@ class Just<T> implements Maybe<T> {
 
   @override
   Maybe<T> chain(Maybe<T> next) => this;
-
-  @override
-  Maybe<R> as<R>() => Just(value as R);
 
   @override
   bool operator ==(other) => other is Just<T> && other.value == value;

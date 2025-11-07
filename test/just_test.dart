@@ -21,7 +21,7 @@ void main() {
 
   test('Basic getters', () async {
     Maybe<int> oddTimes3(number) =>
-        Just(number).type<int>().where((_) => _.isOdd).map((_) => _ * 3);
+        Just(number).type<int>().where((it) => it.isOdd).map((it) => it * 3);
 
     expect(oddTimes3(5).orThrow(() => 'Oops'), 15);
     expect(await oddTimes3(5).orGetAsync(() => Future.value(100)), 15);
@@ -34,8 +34,8 @@ void main() {
   });
 
   test('Map', () {
-    expect(Just(2).map((_) => _ * 2).orThrow(() => 'Oops'), 4);
-    expect(Nothing<int>().map((_) => _ * 2), isA<Nothing<int>>());
+    expect(Just(2).map((it) => it * 2).orThrow(() => 'Oops'), 4);
+    expect(Nothing<int>().map((it) => it * 2), isA<Nothing<int>>());
   });
 
   test('TryMap', () {
@@ -62,13 +62,13 @@ void main() {
   });
 
   test('FlatMap', () {
-    expect(Just(2).flatMap((_) => Just(_ * 2)).orThrow(() => 'Oops'), 4);
-    expect(Nothing<int>().flatMap((_) => Just(_ * 2)), isA<Nothing<int>>());
+    expect(Just(2).flatMap((it) => Just(it * 2)).orThrow(() => 'Oops'), 4);
+    expect(Nothing<int>().flatMap((it) => Just(it * 2)), isA<Nothing<int>>());
   });
 
   test('Filtering', () {
-    expect(Just(2).where((_) => _.isEven).orThrow(() => 'Oops'), 2);
-    expect(Nothing<int>().where((_) => _.isEven), isA<Nothing<int>>());
+    expect(Just(2).where((it) => it.isEven).orThrow(() => 'Oops'), 2);
+    expect(Nothing<int>().where((it) => it.isEven), isA<Nothing<int>>());
   });
 
   test('Default value', () {
@@ -119,11 +119,6 @@ void main() {
   test('Chain', () {
     expect(Nothing<int>().chain(Just(2)).or(42), 2);
     expect(Just(1).chain(Just(2)).or(42), 1);
-  });
-
-  test('As', () {
-    expect(Just<Object>(2).as<int>().orThrow(() => 'oops'), isA<int>());
-    expect(Nothing<Object>().as<int>().or(2), isA<int>());
   });
 
   test('Equality', () {
