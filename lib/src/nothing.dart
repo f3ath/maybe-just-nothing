@@ -59,9 +59,6 @@ class Nothing<T> implements Maybe<T> {
   Maybe<T> chain(Maybe<T> next) => next;
 
   @override
-  Nothing<R> as<R>() => Nothing();
-
-  @override
   bool operator ==(other) => other.runtimeType == runtimeType;
 
   @override

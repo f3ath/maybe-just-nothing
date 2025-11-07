@@ -12,7 +12,7 @@ abstract class Maybe<T> {
   /// Maps the value to P.
   Maybe<P> flatMap<P>(Maybe<P> Function(T value) mapper);
 
-  /// Filter the value using the [predicate].
+  /// Filters the value using the [predicate].
   Maybe<T> where(bool Function(T value) predicate);
 
   /// Returns the wrapped value (if present), or the [defaultValue].
@@ -39,8 +39,8 @@ abstract class Maybe<T> {
   /// Narrows the type to P if the value is present and has actually the type of P.
   Maybe<P> type<P>();
 
-  /// If this and the [other] are both [Just] values, merges them using the [merger] function and returns [Just]<V>.
-  /// Otherwise returns [Nothing]<V>
+  /// If this and the [other] are both [Just] values, merges them using the [merger] function and returns [Just].
+  /// Otherwise returns [Nothing]
   Maybe<R> merge<R, V>(Maybe<V> other, Merger<R, T, V> merger);
 
   /// Same as [merge], but with 2 arguments.
@@ -50,10 +50,6 @@ abstract class Maybe<T> {
   /// If this is [Nothing], returns the result of [next]. Otherwise return this..
   Maybe<T> fallback(Maybe<T> Function() next);
 
-  /// If this is [Nothing], returns [next]. Otherwise return this..
+  /// If this is [Nothing], returns [next]. Otherwise returns this.
   Maybe<T> chain(Maybe<T> next);
-
-  /// WARNING! This method is experimental and may be removed in the future versions.
-  /// Forceful typecast to [R].
-  Maybe<R> as<R>();
 }
